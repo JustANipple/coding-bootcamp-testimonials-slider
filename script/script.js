@@ -27,8 +27,55 @@ const image = document.querySelector(".testimonial_img");
 const testName = document.querySelector(".name");
 const testJob = document.querySelector(".job");
 const testReview = document.querySelector(".review_text");
+const review = document.querySelector(".review");
+const elements = [image, testReview, testName, testJob, review];
 
-image.setAttribute("src", reviews[0].img);
-testName.textContent = reviews[0].name;
-testJob.textContent = reviews[0].job;
-testReview.textContent = reviews[0].review;
+for(const elem of elements) {
+    elem.style.transition = "all .25s ease-in-out";
+}
+
+let index = 0;
+changeContent();
+
+document.querySelector(".btn_forward").addEventListener("click", () => {
+    if(index < reviews.length - 1) {
+        index++;
+        changeContent("right");
+    }
+});
+document.querySelector(".btn_back").addEventListener("click", () => {
+    if(index-1 >= 0) {
+        index--;
+        changeContent("left");
+    }
+});
+
+function changeContent(direction) {
+    let offset = 0;
+    if(direction === "right") {
+        offset = -5;
+    } else if (direction === "left") {
+        offset = 5;
+    }
+    for(const elem of elements) {
+        elem.style.transform = "translateX(" + offset +  "rem)";
+        elem.style.opacity = "0";
+        setTimeout(() => {
+            elem.style.transform = "translateX(" + offset * -1 + "rem)";
+        }, 250);
+    }
+
+    setTimeout(() => {
+        image.setAttribute("src", reviews[index].img);
+        testName.textContent = reviews[index].name;
+        testJob.textContent = reviews[index].job;
+        testReview.textContent = reviews[index].review;
+    }, 250);
+
+    setTimeout(() => {
+        for(const elem of elements) {
+            elem.style.transform = "translateX(0)";
+            elem.style.opacity = "1";
+        }
+    }, 500);
+}
